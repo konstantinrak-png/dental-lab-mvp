@@ -1,8 +1,15 @@
 const crypto = require("crypto");
+const fs = require("fs");
 const path = require("path");
 const Database = require("better-sqlite3");
 
-const dbPath = path.join(process.cwd(), "orders.db");
+const dataDir = process.env.DATA_DIR
+  ? path.resolve(process.env.DATA_DIR)
+  : process.cwd();
+
+fs.mkdirSync(dataDir, { recursive: true });
+
+const dbPath = path.join(dataDir, "orders.db");
 const db = new Database(dbPath);
 const ROLES = new Set(["admin", "clinic"]);
 

@@ -39,7 +39,8 @@ npm run start
   - базу в `${DATA_DIR}/orders.db`
   - файли в `${DATA_DIR}/uploads`
 
-Папки створюються автоматично при старті застосунку.
+Папки створюються автоматично тільки в runtime, коли застосунок реально працює з базою або файлами.
+На етапі `next build` файлову систему для `DATA_DIR` застосунок не чіпає, тому Render build не падає, навіть якщо persistent disk ще не змонтований.
 
 ## Створення першого користувача
 
@@ -103,3 +104,4 @@ npm run create-user -- --email=clinic@example.com --password=secret123 --role=cl
 - без `Persistent Disk` SQLite і `uploads` будуть втрачатися при redeploy/restart
 - `DATA_DIR` має вказувати саме на mount path диска
 - локально `DATA_DIR` можна не задавати
+- під час `build` Render може ще не мати доступу до disk mount, тому ініціалізація сховища відкладена до runtime
