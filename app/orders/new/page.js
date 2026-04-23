@@ -3,6 +3,9 @@ import { requireUser } from "@/lib/auth";
 import { getStatuses } from "@/lib/orders";
 import OrderForm from "./order-form";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function NewOrderPage() {
   const user = await requireUser();
   const statuses = getStatuses();

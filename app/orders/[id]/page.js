@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { getOrderById } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const statusLabels = {
   new: "новий",

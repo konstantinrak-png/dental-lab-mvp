@@ -4,6 +4,7 @@ import { listOrders } from "@/lib/orders";
 import StatusSelect from "./status-select";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const statusLabels = {
   all: "усі статуси",
