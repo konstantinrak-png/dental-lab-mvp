@@ -24,12 +24,18 @@ const statusLabels = {
 export default function OrderForm({ statuses }) {
   const router = useRouter();
   const [form, setForm] = useState(initialForm);
+  const [files, setFiles] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [fileInputKey, setFileInputKey] = useState(0);
 
   function updateField(event) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  function updateFiles(event) {
+    setFiles(Array.from(event.target.files || []));
   }
 
   async function handleSubmit(event) {
@@ -38,12 +44,19 @@ export default function OrderForm({ statuses }) {
     setError("");
 
     try {
+      const formData = new FormData();
+
+      Object.entries(form).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
+
       const response = await fetch("/api/orders", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(form)
+        body: formData
       });
 
       if (!response.ok) {
@@ -52,6 +65,8 @@ export default function OrderForm({ statuses }) {
       }
 
       setForm(initialForm);
+      setFiles([]);
+      setFileInputKey((current) => current + 1);
       router.push("/orders");
       router.refresh();
     } catch (submitError) {
@@ -142,6 +157,29 @@ export default function OrderForm({ statuses }) {
           value={form.comment}
           onChange={updateField}
         />
+      </label>
+
+      <label className="field full">
+        <span>Файли</span>
+        <input
+          key={fileInputKey}
+          type="file"
+          accept=".jpg,.jpeg,.png,.pdf,.zip,.html,.ply"
+          multiple
+          onChange={updateFiles}
+        />
+        <small className="field-hint">
+          Підтримуються файли: JPG, PNG, PDF, ZIP, HTML, PLY.
+        </small>
+        {files.length > 0 ? (
+          <div className="file-list">
+            {files.map((file) => (
+              <span key={`${file.name}-${file.size}`} className="file-chip">
+                {file.name}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </label>
 
       {error ? (

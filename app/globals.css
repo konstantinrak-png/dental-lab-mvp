@@ -109,12 +109,86 @@ main {
   background: var(--surface-muted);
 }
 
+.table-action {
+  min-height: 36px;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid rgba(219, 225, 234, 0.8);
   border-radius: 18px;
   padding: 28px;
   box-shadow: var(--shadow-md);
+}
+
+.filters-card {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid rgba(219, 225, 234, 0.8);
+  border-radius: 18px;
+  box-shadow: var(--shadow-md);
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.filters-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.details-card {
+  padding: 28px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.detail-item {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-muted);
+}
+
+.detail-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detail-value {
+  display: block;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.attachments-section {
+  margin-top: 28px;
+}
+
+.attachments-section h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+}
+
+.attachments-empty {
+  margin: 0;
+  color: var(--text-soft);
 }
 
 .form-grid {
@@ -133,6 +207,11 @@ main {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-soft);
+}
+
+.field-hint {
+  color: var(--text-soft);
+  font-size: 13px;
 }
 
 .field.full {
@@ -173,6 +252,32 @@ textarea:focus {
 textarea {
   min-height: 112px;
   resize: vertical;
+}
+
+.file-list,
+.file-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.file-chip,
+.file-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.file-link:hover {
+  border-color: var(--border-strong);
+  background: var(--surface);
 }
 
 .table-wrap {
@@ -302,6 +407,22 @@ tbody tr:last-child td {
 
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-card {
+    padding: 20px;
+  }
+
+  .filters-actions {
+    flex-direction: column;
   }
 
   .card {

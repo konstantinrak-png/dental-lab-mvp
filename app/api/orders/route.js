@@ -1,4 +1,4 @@
-import { createOrder, listOrders } from "@/lib/orders";
+import { createOrderWithFiles, listOrders } from "@/lib/orders";
 
 export async function GET() {
   const orders = listOrders();
@@ -7,8 +7,22 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const order = createOrder(body);
+    const formData = await request.formData();
+    const body = {
+      clinic_name: formData.get("clinic_name"),
+      doctor_name: formData.get("doctor_name"),
+      patient_name: formData.get("patient_name"),
+      work_type: formData.get("work_type"),
+      material: formData.get("material"),
+      comment: formData.get("comment"),
+      due_date: formData.get("due_date"),
+      status: formData.get("status")
+    };
+    const files = formData
+      .getAll("files")
+      .filter((file) => file && typeof file.name === "string" && file.size > 0);
+    const order = await createOrderWithFiles(body, files);
+
     return Response.json(order, { status: 201 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 400 });
