@@ -1,9 +1,9 @@
-import { getCurrentUser } from "@/lib/auth";
+import { getUserFromRequest } from "@/lib/auth";
 import { updateOrderStatus } from "@/lib/orders";
 
 export async function PATCH(request, { params }) {
   try {
-    const user = await getCurrentUser();
+    const user = getUserFromRequest(request);
 
     if (!user) {
       return Response.json(

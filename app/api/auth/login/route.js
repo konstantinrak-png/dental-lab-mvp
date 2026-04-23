@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { getSessionCookieName } from "@/lib/auth";
+import {
+  getSessionCookieName,
+  getSessionCookieOptions
+} from "@/lib/auth";
 import {
   authenticateUser,
   createSession
@@ -20,11 +23,11 @@ export async function POST(request) {
     const token = createSession(user.id);
     const response = NextResponse.json({ user });
 
-    response.cookies.set(getSessionCookieName(), token, {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/"
-    });
+    response.cookies.set(
+      getSessionCookieName(),
+      token,
+      getSessionCookieOptions()
+    );
 
     return response;
   } catch (error) {

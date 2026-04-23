@@ -1,9 +1,9 @@
 import fs from "fs";
-import { getCurrentUser } from "@/lib/auth";
+import { getUserFromRequest } from "@/lib/auth";
 import { getOrderFileById } from "@/lib/orders";
 
-export async function GET(_request, { params }) {
-  const user = await getCurrentUser();
+export async function GET(request, { params }) {
+  const user = getUserFromRequest(request);
 
   if (!user) {
     return new Response("Необхідна авторизація", { status: 401 });

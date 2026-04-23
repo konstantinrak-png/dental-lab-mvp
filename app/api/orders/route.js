@@ -1,8 +1,8 @@
-import { getCurrentUser } from "@/lib/auth";
+import { getUserFromRequest } from "@/lib/auth";
 import { createOrderWithFiles, listOrders } from "@/lib/orders";
 
-export async function GET() {
-  const user = await getCurrentUser();
+export async function GET(request) {
+  const user = getUserFromRequest(request);
 
   if (!user) {
     return Response.json({ error: "Необхідна авторизація" }, { status: 401 });
@@ -14,7 +14,7 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const user = await getCurrentUser();
+    const user = getUserFromRequest(request);
 
     if (!user) {
       return Response.json(
