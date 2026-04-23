@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { requireUser } from "@/lib/auth";
 import { listOrders } from "@/lib/orders";
 import StatusSelect from "./status-select";
 
@@ -52,6 +53,7 @@ function filterOrders(orders, filters) {
 }
 
 export default async function OrdersPage({ searchParams }) {
+  const user = await requireUser();
   const params = (await searchParams) || {};
   const filters = {
     clinic: String(params.clinic || ""),
@@ -59,7 +61,7 @@ export default async function OrdersPage({ searchParams }) {
     patient: String(params.patient || ""),
     status: String(params.status || "")
   };
-  const orders = filterOrders(listOrders(), filters);
+  const orders = filterOrders(listOrders(user), filters);
 
   return (
     <main>
@@ -69,6 +71,12 @@ export default async function OrdersPage({ searchParams }) {
           <p>Список усіх замовлень лабораторії.</p>
         </div>
         <div className="actions">
+          <span className="session-badge">
+            {user.role === "admin" ? "admin" : user.clinic_name}
+          </span>
+          <Link href="/logout" className="button secondary">
+            Вийти
+          </Link>
           <Link href="/orders/new" className="button">
             Створити замовлення
           </Link>

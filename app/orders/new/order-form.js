@@ -21,7 +21,7 @@ const statusLabels = {
   shipped: "відправлено"
 };
 
-export default function OrderForm({ statuses }) {
+export default function OrderForm({ statuses, currentUser }) {
   const router = useRouter();
   const [form, setForm] = useState(initialForm);
   const [files, setFiles] = useState([]);
@@ -82,9 +82,14 @@ export default function OrderForm({ statuses }) {
         <span>Назва клініки</span>
         <input
           name="clinic_name"
-          value={form.clinic_name}
+          value={
+            currentUser.role === "clinic"
+              ? currentUser.clinic_name
+              : form.clinic_name
+          }
           onChange={updateField}
           required
+          readOnly={currentUser.role === "clinic"}
         />
       </label>
 

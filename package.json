@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-user": "node scripts/create-user.js",
+    "create-admin": "node scripts/create-user.js --role=admin"
   },
   "dependencies": {
     "better-sqlite3": "^11.10.0",

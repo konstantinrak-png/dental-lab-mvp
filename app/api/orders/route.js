@@ -1,12 +1,28 @@
+import { getCurrentUser } from "@/lib/auth";
 import { createOrderWithFiles, listOrders } from "@/lib/orders";
 
 export async function GET() {
-  const orders = listOrders();
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return Response.json({ error: "Необхідна авторизація" }, { status: 401 });
+  }
+
+  const orders = listOrders(user);
   return Response.json(orders);
 }
 
 export async function POST(request) {
   try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return Response.json(
+        { error: "Необхідна авторизація" },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const body = {
       clinic_name: formData.get("clinic_name"),
@@ -21,7 +37,7 @@ export async function POST(request) {
     const files = formData
       .getAll("files")
       .filter((file) => file && typeof file.name === "string" && file.size > 0);
-    const order = await createOrderWithFiles(body, files);
+    const order = await createOrderWithFiles(body, files, user);
 
     return Response.json(order, { status: 201 });
   } catch (error) {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { requireUser } from "@/lib/auth";
 import { getOrderById } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
@@ -35,8 +36,9 @@ function formatValue(field, value) {
 }
 
 export default async function OrderDetailsPage({ params }) {
+  const user = await requireUser();
   const { id } = await params;
-  const order = getOrderById(id);
+  const order = getOrderById(id, user);
 
   return (
     <main>
@@ -50,6 +52,12 @@ export default async function OrderDetailsPage({ params }) {
           </p>
         </div>
         <div className="actions">
+          <span className="session-badge">
+            {user.role === "admin" ? "admin" : user.clinic_name}
+          </span>
+          <Link href="/logout" className="button secondary">
+            Вийти
+          </Link>
           <Link href="/orders" className="button secondary">
             До списку
           </Link>
