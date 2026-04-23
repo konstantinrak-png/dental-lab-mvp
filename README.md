@@ -1,49 +1,105 @@
 # Dental Lab MVP
 
-Минимальный MVP для зуботехнической лаборатории на Next.js.
+Мінімальний MVP для зуботехнічної лабораторії на Next.js.
 
-## Что есть
+## Що є в проєкті
 
-- Страница создания заказа: `/orders/new`
-- Страница списка заказов: `/orders`
-- SQLite база `orders.db`
-- Поля заказа:
-  - `clinic_name`
-  - `doctor_name`
-  - `patient_name`
-  - `work_type`
-  - `material`
-  - `comment`
-  - `due_date`
-  - `status`
-- Статусы:
-  - `new`
-  - `in_progress`
-  - `ready`
-  - `shipped`
+- список замовлень `/orders`
+- створення замовлення `/orders/new`
+- inline-зміна статусу
+- пошук і фільтри
+- детальна сторінка замовлення
+- завантаження і скачування файлів
+- авторизація з ролями `admin` і `clinic`
 
-## Установка
+## Локальний запуск
 
 ```bash
 npm install
-```
-
-## Запуск в dev режиме
-
-```bash
 npm run dev
 ```
 
-После запуска приложение будет доступно на `http://localhost:3000`.
+Після запуску застосунок буде доступний на `http://localhost:3000`.
 
-## Production сборка
+## Production build
 
 ```bash
 npm run build
 npm run start
 ```
 
-## Как хранится база
+## Де зберігаються дані
 
-- SQLite-файл создаётся автоматически как `orders.db` в корне проекта.
-- Таблица `orders` создаётся автоматически при первом обращении к приложению.
+Застосунок використовує змінну середовища `DATA_DIR`.
+
+- якщо `DATA_DIR` не задано, локально все працює як раніше:
+  - база: `./orders.db`
+  - файли: `./uploads`
+- якщо `DATA_DIR` задано, застосунок зберігає:
+  - базу в `${DATA_DIR}/orders.db`
+  - файли в `${DATA_DIR}/uploads`
+
+Папки створюються автоматично при старті застосунку.
+
+## Створення першого користувача
+
+Перший `admin`:
+
+```bash
+npm run create-admin -- --email=admin@example.com --password=secret123
+```
+
+Користувач `clinic`:
+
+```bash
+npm run create-user -- --email=clinic@example.com --password=secret123 --role=clinic --clinic="My Clinic"
+```
+
+## Деплой на Render з SQLite і persistent disk
+
+Цей проєкт можна деплоїти на Render без переходу на іншу базу даних, якщо використати Persistent Disk.
+
+### 1. Створи Web Service
+
+- `Environment`: `Node`
+- `Build Command`: `npm install && npm run build`
+- `Start Command`: `npm run start`
+
+### 2. Додай Persistent Disk
+
+У Render для сервісу додай disk, наприклад:
+
+- `Mount Path`: `/var/data`
+
+### 3. Додай environment variable
+
+У Render додай:
+
+```bash
+DATA_DIR=/var/data
+```
+
+Тоді Render буде зберігати:
+
+- SQLite базу в `/var/data/orders.db`
+- завантажені файли в `/var/data/uploads`
+
+### 4. Задеплой сервіс
+
+Після першого деплою створи першого `admin` через Render Shell:
+
+```bash
+npm run create-admin -- --email=admin@example.com --password=secret123
+```
+
+За потреби створи clinic-користувача:
+
+```bash
+npm run create-user -- --email=clinic@example.com --password=secret123 --role=clinic --clinic="My Clinic"
+```
+
+### 5. Важливі примітки для Render
+
+- без `Persistent Disk` SQLite і `uploads` будуть втрачатися при redeploy/restart
+- `DATA_DIR` має вказувати саме на mount path диска
+- локально `DATA_DIR` можна не задавати
